@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	                    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- DEFINE THE METHOD INTERCEPTOR -->
+    <bean id="Interceptor" class="com.midmarsh.sample.aop.LoggingInterceptor" />
+
+    <!-- DEFINE THE POINTCUT ADVISOR TO INTERCEPT ON GETTER METHODS -->
+    <bean id="InterceptorPointcut"
+        class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="advice" ref="Interceptor" />
+        <property name="pattern" value=".*" />
+    </bean>
+
+    <!-- CREATE the employee and department beans -->
+    <bean id="employeeBean" class="com.midmarsh.sample.employee.EmployeeImpl">
+        <property name="employeeId" value="AB1234E" />
+        <property name="name" value="John Hunt" />
+    </bean>
+
+    <!--  Note the change of id -->
+    <bean id="departmentImpl" class="com.midmarsh.sample.employee.DepartmentImpl">
+        <property name="name" value="Java Development Dept" />
+        <property name="employee" ref="employeeBean" />
+    </bean>
+
+    <!-- WEAVE the ASPECT with the business logic -->
+    <bean id="Department" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="departmentImpl" />
+        <property name="interceptorNames" value="InterceptorPointcut" />
+    </bean>
+   
+</beans>

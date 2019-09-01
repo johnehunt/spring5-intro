@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- Instantiation using a Static factory method -->
+    <bean id="Person" class="com.midmarsh.spring.PersonFactory" factory-method="createNewInstance"/>
+    
+    <!-- Instantiation using an Instance factory method  -->
+    <bean id="PersonFactory2" class="com.midmarsh.spring.PersonFactory2" />
+
+    <bean id="OtherPerson" factory-bean="PersonFactory2" factory-method="createNewInstance"/>
+
+</beans>

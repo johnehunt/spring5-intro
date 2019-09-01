@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="userServiceClient"
+		class="com.midmarsh.spring.rest.client.UsersServiceClient">
+		<constructor-arg ref="restTemplate" />
+		<constructor-arg
+			value="http://localhost:8080/simple/service/users/user/" />
+	</bean>
+
+	<bean id="restTemplate"
+		class="org.springframework.web.client.RestTemplate">
+	</bean>
+</beans>

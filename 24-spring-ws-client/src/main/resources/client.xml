@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="service"
+		class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="com.midmarsh.ws.spring.IEchoService" />
+		<property name="wsdlDocumentUrl" value="http://localhost:8080/service/echo?wsdl" />
+		<property name="namespaceUri" value="http://www.springframework.org/schema/beans" />
+		<property name="serviceName" value="echo" />
+		<property name="portName" value="echoPort" />
+	</bean>
+
+	<bean id="client" class="com.midmarsh.ws.client.EchoClientImpl">
+		<property name="service" ref="service" />
+	</bean>
+
+</beans>

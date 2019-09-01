@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    
+    <bean id="auditor" class="com.midmarsh.sample.pojo.Auditor" />
+    
+    <aop:config>
+        <aop:aspect id="sampleAspect" ref="auditor" >
+            <aop:pointcut id="apointcut" 
+                          expression="execution(* com.midmarsh.spring.beans.*.*(..))"/>
+            <aop:before 
+                method="printStartMessage"
+                pointcut-ref="apointcut"/>
+            <aop:after-returning
+                method="printFinishedMessage"
+                pointcut-ref="apointcut"/>
+        </aop:aspect>
+    </aop:config>
+    
+    <!-- Define the application beans -->
+    <bean id="MessageService" class="com.midmarsh.spring.beans.DefaultMessageService" c:msg="Welcome" />
+	
+	<bean id="Formatter" class="org.springframework.format.datetime.DateFormatter" c:pattern="YYYY-MM-dd" />
+	
+    <bean id="WelcomeService" class="com.midmarsh.spring.beans.WelcomeServiceImpl">
+       <property name="MessageService" ref="MessageService" />
+       <property name="formatter" ref="Formatter" />
+    </bean>
+
+</beans>

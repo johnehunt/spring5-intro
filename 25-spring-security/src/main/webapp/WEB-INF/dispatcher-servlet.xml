@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<!-- Turn on Request based Authentication -->
+	<!--  
+	<security:http auto-config="true">
+		<security:intercept-url pattern="/login.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/secure/**" access="ROLE_USER" />
+		<security:form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1" />
+	</security:http>
+	
+	-->
+
+	<security:http auto-config="true"> 
+	    <security:intercept-url pattern="/secure/**"  access="ROLE_USER" /> 
+	    <security:http-basic /> 
+	    <security:session-management  session-fixation-protection="migrateSession"> 
+	        <security:concurrency-control max-sessions="1" error-if-maximum-exceeded="true" /> 
+	    </security:session-management> 
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="jzh" password="pword"
+					authorities="ROLE_USER,ROLE_TELLER,ROLE_ADMIN" />
+				<security:user name="dzc" password="pword"
+					authorities="ROLE_USER" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+	<!-- <authentication-manager> <authentication-provider> <jdbc-user-service 
+		data-source-ref="dataSource" authorities-by-username-query="select username,authority 
+		from users where username=?"/> </authentication-provider> </authentication-manager> -->
+
+	<!-- <global-method-security> <protect-pointcut expression="execution(* 
+		com.mycompany.*Service.set*(..))" access="ROLE_USER"/> </global-method-security> -->
+
+	<bean id="bookService" class="com.jjh.spring.bean.BookServiceImpl">
+		<security:intercept-methods>
+			<security:protect method="get*" access="ROLE_USER" />
+			<security:protect method="buy" access="ROLE_TELLER,ROLE_ADMIN" />
+		</security:intercept-methods>
+	</bean>
+
+	<bean id="welcomeController" class="com.jjh.spring.mvc.WelcomeController">
+		<constructor-arg ref="bookService" />
+	</bean>
+
+	<!-- Define where views should be found -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/views/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+	<!-- Tells Displatcher servlet how to handle requests -->
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/*">welcomeController</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>
