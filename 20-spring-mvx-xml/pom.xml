@@ -13,7 +13,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>5.0.1.RELEASE</org.springframework.version>
+		<org.springframework.version>5.2.21.RELEASE</org.springframework.version>
 		<aspectj.version>1.9.1</aspectj.version>
 		<log4j.version>2.11.1</log4j.version>
 		<maven.compiler.source>10</maven.compiler.source>
